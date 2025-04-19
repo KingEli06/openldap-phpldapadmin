@@ -1,0 +1,24 @@
+# templates/fail2ban-ldap-log-storage.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.fail2ban.volume.pvName }}
+spec:
+  capacity:
+    storage: {{ .Values.fail2ban.volume.size }}
+  accessModes:
+    - {{ .Values.fail2ban.volume.accessMode }}
+  hostPath:
+    path: {{ .Values.fail2ban.volume.hostPath }}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.fail2ban.volume.pvcName }}
+spec:
+  accessModes:
+    - {{ .Values.fail2ban.volume.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.fail2ban.volume.size }}

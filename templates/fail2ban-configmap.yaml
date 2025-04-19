@@ -1,0 +1,26 @@
+# fail2ban-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fail2ban-config
+data:
+  jail.local: |
+    [DEFAULT]
+    bantime = 600
+    findtime = 300
+    maxretry = 5
+    backend = auto
+    destemail = root@localhost
+    action = %(action_)s
+
+    [ldap]
+    enabled = true
+    port = ldap
+    logpath = /var/log/ldap/slapd.log
+    filter = ldap
+    maxretry = 5
+
+  ldap.conf: |
+    [Definition]
+    failregex = .*slapd.*: .*authentication failure.*dn=.*$
+    ignoreregex =

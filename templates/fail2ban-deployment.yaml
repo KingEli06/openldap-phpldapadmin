@@ -1,0 +1,35 @@
+# fail2ban-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fail2ban
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fail2ban
+  template:
+    metadata:
+      labels:
+        app: fail2ban
+    spec:
+      containers:
+        - name: fail2ban
+          image: crazymax/fail2ban:latest
+          volumeMounts:
+            - name: ldap-logs
+              mountPath: /var/log/ldap
+            - name: config
+              mountPath: /data/fail2ban
+          env:
+            - name: F2B_LOG_TARGET
+              value: STDOUT
+          securityContext:
+            runAsUser: 0
+      volumes:
+        - name: ldap-logs
+          persistentVolumeClaim:
+            claimName: ldap-log-pvc
+        - name: config
+          configMap:
+            name: fail2ban-config
